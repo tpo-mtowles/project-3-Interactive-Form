@@ -15,15 +15,31 @@ jobRoleSelect.addEventListener('input', e => {
 
 
 shirtDesignSelect.addEventListener('input', e => {
-    const shirtJsPuns = siteOptions[16].getAttribute('data-theme');
-    const shirtHeartJs = siteOptions[19].getAttribute('data-theme');
+    const colorOptions = shirtColorSelect.querySelectorAll('[data-theme'); //Array of options
+    //e.target = shirtDesignSelect;
     shirtColorSelect.disabled = false;
-    if (e.target.getAttribute.value === 'js puns') {
-        for (i = 0; i < shirtHeartJs.length; i++)
-        shirtHeartJs[i].hidden = true;
-    } else {
-        for (i = 0; i < shirtJsPuns.length; i++)
-        shirtJsPuns[i].hidden = true;
+    if (e.target.value === 'heart js' ) {
+        for (i = 0; i < colorOptions.length; i++) {
+            const theme = colorOptions[i].getAttribute('data-theme');
+            if (theme !== e.target.value) {
+                colorOptions[i].style.display = 'none';
+            } else {
+                colorOptions[i].style.display = 'block';
+                colorOptions[i].selected = true;
+            } 
+        }
     }
-    
+    if (e.target.value === 'js puns' ) {
+        for (i = 0; i < colorOptions.length; i++) {
+            const theme = colorOptions[i].getAttribute('data-theme');
+                if (theme !== e.target.value) {
+                    colorOptions[i].style.display = 'none';
+
+                } else {
+                    colorOptions[i].style.display = 'block';
+                    colorOptions[i].selected = true;
+                }
+        }       
+    }       
+       
 });
