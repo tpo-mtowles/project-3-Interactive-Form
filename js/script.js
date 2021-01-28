@@ -1,4 +1,9 @@
 
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const creditCardInput = document.getElementById('cc-num');
+const zipcodeInput = document.getElementById('zip');
+const CVVInput = document.getElementById('cvv');
 const siteOptions = document.getElementsByTagName('option');
 const jobRoleInput = document.getElementById('other-job-role');
 const jobRoleSelect = document.querySelector('select');
@@ -9,15 +14,72 @@ const activitiesCb = document.querySelectorAll('[type=checkbox]')
 let totalCostBox = document.getElementById('activities-cost')
 let totalCost = 0;
 const paymentSelect = document.getElementById('payment');
-const creditCard = document.getElementById('credit-card');
-const payPal = document.getElementById('paypal');
-const bitcoin = document.getElementById('bitcoin');
+const creditCardDiv = document.getElementById('credit-card');
+const payPalDiv = document.getElementById('paypal');
+const bitcoinDiv = document.getElementById('bitcoin');
 
 
 paymentSelect[1].selected = true;
-creditCard.style.display = 'block';
-payPal.style.display = 'none';
-bitcoin.style.display = 'none';
+creditCardDiv.style.display = 'block';
+payPalDiv.style.display = 'none';
+bitcoinDiv.style.display = 'none';
+
+function isUsernameValid(username) {
+    return /^(?!\s*$).+/.test(username);
+  };
+
+function isEmailValid(email) {
+    return /^[^@]+@[^@.]+.(com)$/i.test(email);
+};
+
+function isActivitiesValid(activities) {
+    let isChecked;
+    for (i=0; i < activitiesCb.length; i++) {
+        if (activitiesCb[i].checked === false) {
+            return isChecked = false;
+        } else {
+            return isChecked = true;
+        }
+    }
+};
+
+function isCreditCarValid(card) {
+    return /^\d{13,16}$/.test(card);
+};
+
+function isZipCodeValid(zipcode) {
+    return /^\d{5}$/.test(zipcode);
+};
+
+function isCVVValid(cvv) {
+    return /^\d{3}$/.test(cvv);
+};
+
+function showOrHideHint(show, message ) {
+    if (show) {
+        message.style.display = 'inherit';
+    } else {
+        message.style.display = 'none';
+    }
+};
+
+function createEventListener(helperFunction) {
+    return e => {
+        const regExValue = e.target.value;
+        const valid = helperFunction(regExValue);
+        const showHint = regExValue !== "" && !valid; 
+        const hint = e.target.nextElementSibling;
+        showOrHideHint(showHint, hint);
+    };
+};
+
+nameInput.addEventListener('submit', createEventListener(isUsernameValid));
+emailInput.addEventListener('submit', createEventListener(isEmailValid));
+creditCardInput.addEventListener('submit', createEventListener(isCreditCarValid));
+zipcodeInput.addEventListener('submit', createEventListener(isZipCodeValid));
+CVVInput.addEventListener('submit', createEventListener(isCVVValid));
+
+
 
 
 jobRoleSelect.addEventListener('input', e => {
@@ -27,7 +89,6 @@ jobRoleSelect.addEventListener('input', e => {
         jobRoleInput.type = 'hidden'
     }
 });
-
 
 shirtDesignSelect.addEventListener('input', e => {
 const colorOptions = shirtColorSelect.querySelectorAll('[data-theme'); //Array of options
@@ -69,17 +130,25 @@ activitiesFs.addEventListener('change', e => {
 
 paymentSelect.addEventListener('change', e => {
     if (e.target.value === 'paypal' ) {
-        payPal.style.display = 'block';
-        creditCard.style.display = 'none';
-        bitcoin.style.display = 'none';
+        payPalDiv.style.display = 'block';
+        creditCardDiv.style.display = 'none';
+        bitcoinDiv.style.display = 'none';
     } else if (e.target.value === 'bitcoin') {
-        payPal.style.display = 'none';
-        creditCard.style.display = 'none';
-        bitcoin.style.display = 'block';
+        payPalDiv.style.display = 'none';
+        creditCardDiv.style.display = 'none';
+        bitcoinDiv.style.display = 'block';
     } else {
-        payPal.style.display = 'none';
-        creditCard.style.display = 'block';
-        bitcoin.style.display = 'none';
+        payPalDiv.style.display = 'none';
+        creditCardDiv.style.display = 'block';
+        bitcoinDiv.style.display = 'none';
     }
 
 })
+
+isUsernameValid(nameInput.value);
+isEmailValid(emailInput.value);
+isCVVValid(creditCardInput.value);
+isZipCodeValid(zipcodeInput.value);
+isCVVValid(CVVInput.value);
+
+
