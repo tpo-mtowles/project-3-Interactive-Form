@@ -6,8 +6,8 @@ const shirtDesignSelect = document.getElementById('design');
 const shirtColorSelect = document.getElementById('color');
 const activitiesFs = document.getElementById('activities');
 const activitiesCb = document.querySelectorAll('[type=checkbox]')
-let totalCost = document.getElementById('activities-cost')
-totalCost.textContent = '';
+let totalCostBox = document.getElementById('activities-cost')
+let totalCost = 0;
 
 jobRoleSelect.addEventListener('input', e => {
     if (e.target.value === 'other') {
@@ -47,13 +47,11 @@ shirtColorSelect.disabled = false;
 });
 
 activitiesFs.addEventListener('change', e => {
-    for (i=0; i < activitiesCb.length; i++) {
-        const total = activitiesCb[i].getAttribute('data-cost');
-        let totalValue = parseInt(total.value);
-        if (e.target.checked === true) {
-            totalCost.textContent += `Total: ${totalValue}`;
-        } //else {
-            //totalCost.textContent = totalCost;
-        //}
+    const runningTotal = parseInt(e.target.getAttribute('data-cost'));
+    if (e.target.checked === true) {
+        totalCost += runningTotal;
+    } else {
+        totalCost -= runningTotal;
     }
-} )
+    totalCostBox.textContent = `Total: ${totalCost}`;
+})
