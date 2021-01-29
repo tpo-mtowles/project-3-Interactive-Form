@@ -2,8 +2,6 @@
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const creditCardInput = document.getElementById('cc-num');
-const zipcodeInput = document.getElementById('zip');
-const CVVInput = document.getElementById('cvv');
 const jobRoleInput = document.getElementById('other-job-role');
 const jobRoleSelect = document.querySelector('select');
 const shirtDesignSelect = document.getElementById('design');
@@ -24,6 +22,14 @@ paymentSelect[1].selected = true;
 creditCardDiv.style.display = 'block';
 payPalDiv.style.display = 'none';
 bitcoinDiv.style.display = 'none';
+
+function addRemoveFocus() {
+    for (i=0; i < checkBoxes.length; i++) {
+        activityFieldSet.addEventListener('focus', e => {
+            checkBoxes[i].parentElement.add('focus');
+        })
+    }
+};
 
 function showOrHideHint(validator, htmlHint ) {
     if (validator === false) {
@@ -77,15 +83,17 @@ function isCreditCardValid() {
 };
 
 function isZipCodeValid(zipcode) {
+    const zipCodeInput = document.getElementById('zip');
     const hint = document.getElementById('zip-hint');
-    const regEx = /^\d{5}$/.test(zipcodeInput.value);
+    const regEx = /^\d{5}$/.test(zipCodeInput.value);
     showOrHideHint(regEx, hint);
     return regEx;
 };
 
 function isCVVValid(cvv) {
+    const C_V_V_Input = document.getElementById('cvv')
     const hint = document.getElementById('cvv-hint');
-    const regEx = /^\d{3}$/.test(CVVInput.value);
+    const regEx = /^\d{3}$/.test(C_V_V_Input.value);
     showOrHideHint(regEx, hint);
     return regEx;
 };
@@ -147,6 +155,7 @@ activityFieldSet.addEventListener('change', e => {
     }
     totalCostBox.textContent = `Total: ${totalCost}`;
 })
+
 
 paymentSelect.addEventListener('change', e => {
     if (e.target.value === 'paypal' ) {
