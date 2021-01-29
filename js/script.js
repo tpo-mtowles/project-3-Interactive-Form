@@ -4,7 +4,6 @@ const emailInput = document.getElementById('email');
 const creditCardInput = document.getElementById('cc-num');
 const zipcodeInput = document.getElementById('zip');
 const CVVInput = document.getElementById('cvv');
-const siteOptions = document.getElementsByTagName('option');
 const jobRoleInput = document.getElementById('other-job-role');
 const jobRoleSelect = document.querySelector('select');
 const shirtDesignSelect = document.getElementById('design');
@@ -18,7 +17,9 @@ const creditCardDiv = document.getElementById('credit-card');
 const payPalDiv = document.getElementById('paypal');
 const bitcoinDiv = document.getElementById('bitcoin');
 
-
+nameInput.focus();
+shirtColorSelect.style.display = 'none';
+jobRoleInput.style.display = 'none';
 paymentSelect[1].selected = true;
 creditCardDiv.style.display = 'block';
 payPalDiv.style.display = 'none';
@@ -101,17 +102,17 @@ function showOrHideHint(validator, htmlHint ) {
     } 
 };
 
-jobRoleSelect.addEventListener('input', e => {
+jobRoleSelect.addEventListener('change', e => {
     if (e.target.value === 'other') {
-        jobRoleInput.type = 'text';
+        jobRoleInput.style.display = 'block';
     } else {
-        jobRoleInput.type = 'hidden'
+        jobRoleInput.style.display = 'none';
     }
 });
 
 shirtDesignSelect.addEventListener('input', e => {
 const colorOptions = shirtColorSelect.querySelectorAll('[data-theme'); 
-shirtColorSelect.disabled = false;
+shirtColorSelect.style.display = 'block';
     if (e.target.value === 'heart js' ) {
         for (i = 0; i < colorOptions.length; i++) {
             const theme = colorOptions[i].getAttribute('data-theme');
