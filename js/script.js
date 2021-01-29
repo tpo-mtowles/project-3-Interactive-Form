@@ -9,9 +9,9 @@ const jobRoleInput = document.getElementById('other-job-role');
 const jobRoleSelect = document.querySelector('select');
 const shirtDesignSelect = document.getElementById('design');
 const shirtColorSelect = document.getElementById('color');
-const activitiesFs = document.getElementById('activities');
-const activitiesCb = document.querySelectorAll('[type=checkbox]')
-let totalCostBox = document.getElementById('activities-cost')
+const activityFieldSet = document.getElementById('activities');
+const checkBoxes = document.querySelectorAll('[type=checkbox]');
+let totalCostBox = document.getElementById('activities-cost');
 let totalCost = 0;
 const paymentSelect = document.getElementById('payment');
 const creditCardDiv = document.getElementById('credit-card');
@@ -24,63 +24,82 @@ creditCardDiv.style.display = 'block';
 payPalDiv.style.display = 'none';
 bitcoinDiv.style.display = 'none';
 
-function isUsernameValid(username) {
-    return /^(?!\s*$).+/.test(username);
+function showOrHideHint(validator, htmlHint ) {
+    if (validator === false) {
+       htmlHint.parentElement.classList.add('not-valid');
+       htmlHint.parentElement.classList.remove('valid');
+       htmlHint.classList.remove('hint');
+    } else {
+        htmlHint.parentElement.classList.add('valid');
+        htmlHint.parentElement.classList.remove('not-valid');
+        htmlHint.classList.add('hint'); 
+    } 
+};
+
+function isUsernameValid() {
+    const hint = document.getElementById('name-hint');
+    const regEx = /^(?!\s*$).+/.test(nameInput.value);
+    showOrHideHint(regEx, hint);
+    return regEx;
   };
 
 function isEmailValid(email) {
-    return /^[^@]+@[^@.]+.(com)$/i.test(email);
+    const hint = document.getElementById('email-hint');
+    const regEx = /^[^@]+@[^@.]+.(com)$/i.test(emailInput.value);
+    showOrHideHint(regEx, hint);
+    return regEx;
 };
 
 function isActivitiesValid(activities) {
-    let isChecked;
-    for (i=0; i < activitiesCb.length; i++) {
-        if (activitiesCb[i].checked === false) {
-            return isChecked = false;
-        } else {
-            return isChecked = true;
+    let isChecked = 0;
+    let valid;
+    const hint = document.getElementById('activities-hint');
+    for (i=0; i < checkBoxes.length; i++) {
+        if (checkBoxes[i].checked === true) {
+            isChecked++; 
         }
-    }
+    } 
+        if (isChecked > 0) {
+            valid = true;
+        } else {
+            valid = false;
+        }   
+        showOrHideHint(isChecked, hint);   
+        return isChecked;      
 };
 
-function isCreditCarValid(card) {
-    return /^\d{13,16}$/.test(card);
+function isCreditCardValid() {
+    const hint = document.getElementById('cc-hint');
+    const regEx = /^\d{13,16}$/.test(creditCardInput.value);
+    showOrHideHint(regEx, hint);
+    return regEx;
 };
 
 function isZipCodeValid(zipcode) {
-    return /^\d{5}$/.test(zipcode);
+    const hint = document.getElementById('zip-hint');
+    const regEx = /^\d{5}$/.test(zipcodeInput.value);
+    showOrHideHint(regEx, hint);
+    return regEx;
 };
 
 function isCVVValid(cvv) {
-    return /^\d{3}$/.test(cvv);
+    const hint = document.getElementById('cvv-hint');
+    const regEx = /^\d{3}$/.test(CVVInput.value);
+    showOrHideHint(regEx, hint);
+    return regEx;
 };
 
-function showOrHideHint(show, message ) {
-    if (show) {
-        message.style.display = 'inherit';
+function showOrHideHint(validator, htmlHint ) {
+    if (validator === false) {
+       htmlHint.parentElement.classList.add('not-valid');
+       htmlHint.parentElement.classList.remove('valid');
+       htmlHint.classList.remove('hint');
     } else {
-        message.style.display = 'none';
-    }
+        htmlHint.parentElement.classList.add('valid');
+        htmlHint.parentElement.classList.remove('not-valid');
+        htmlHint.classList.add('hint'); 
+    } 
 };
-
-function createEventListener(helperFunction) {
-    return e => {
-        const regExValue = e.target.value;
-        const valid = helperFunction(regExValue);
-        const showHint = regExValue !== "" && !valid; 
-        const hint = e.target.nextElementSibling;
-        showOrHideHint(showHint, hint);
-    };
-};
-
-nameInput.addEventListener('submit', createEventListener(isUsernameValid));
-emailInput.addEventListener('submit', createEventListener(isEmailValid));
-creditCardInput.addEventListener('submit', createEventListener(isCreditCarValid));
-zipcodeInput.addEventListener('submit', createEventListener(isZipCodeValid));
-CVVInput.addEventListener('submit', createEventListener(isCVVValid));
-
-
-
 
 jobRoleSelect.addEventListener('input', e => {
     if (e.target.value === 'other') {
@@ -91,7 +110,7 @@ jobRoleSelect.addEventListener('input', e => {
 });
 
 shirtDesignSelect.addEventListener('input', e => {
-const colorOptions = shirtColorSelect.querySelectorAll('[data-theme'); //Array of options
+const colorOptions = shirtColorSelect.querySelectorAll('[data-theme'); 
 shirtColorSelect.disabled = false;
     if (e.target.value === 'heart js' ) {
         for (i = 0; i < colorOptions.length; i++) {
@@ -118,7 +137,7 @@ shirtColorSelect.disabled = false;
     }       
 });
 
-activitiesFs.addEventListener('change', e => {
+activityFieldSet.addEventListener('change', e => {
     const runningTotal = parseInt(e.target.getAttribute('data-cost'));
     if (e.target.checked === true) {
         totalCost += runningTotal;
@@ -145,10 +164,18 @@ paymentSelect.addEventListener('change', e => {
 
 })
 
-isUsernameValid(nameInput.value);
-isEmailValid(emailInput.value);
-isCVVValid(creditCardInput.value);
-isZipCodeValid(zipcodeInput.value);
-isCVVValid(CVVInput.value);
+document.addEventListener('submit', e => {
+    let inputValidation = [];
+    inputValidation.push(isUsernameValid(nameInput));
+    inputValidation.push(isEmailValid(emailInput));
+    inputValidation.push(isActivitiesValid(activityFieldSet));
 
-
+    if (paymentSelect.value === 'credit-card') {
+        inputValidation.push(isCreditCardValid());
+        inputValidation.push(isZipCodeValid());
+        inputValidation.push(isCVVValid());
+    }
+    if (inputValidation.includes(false)){
+        e.preventDefault();
+    }
+})
