@@ -1,4 +1,4 @@
-
+//global variables 
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const creditCardInput = document.getElementById('cc-num');
@@ -15,22 +15,22 @@ const creditCardDiv = document.getElementById('credit-card');
 const payPalDiv = document.getElementById('paypal');
 const bitcoinDiv = document.getElementById('bitcoin');
 
-nameInput.focus();
-shirtColorSelect.style.display = 'none';
-jobRoleInput.style.display = 'none';
-paymentSelect[1].selected = true;
-creditCardDiv.style.display = 'block';
-payPalDiv.style.display = 'none';
-bitcoinDiv.style.display = 'none';
+//calling needed functions
+addRemoveFocus();
+setPage();
 
-function addRemoveFocus() {
-    for (i=0; i < checkBoxes.length; i++) {
-        activityFieldSet.addEventListener('focus', e => {
-            checkBoxes[i].parentElement.add('focus');
-        })
-    }
-};
+//this function will make sure the page loads with the correct element focus and the default hidden elements
+function setPage() {
+    nameInput.focus();
+    shirtColorSelect.style.display = 'none';
+    jobRoleInput.style.display = 'none';
+    paymentSelect[1].selected = true;
+    creditCardDiv.style.display = 'block';
+    payPalDiv.style.display = 'none';
+    bitcoinDiv.style.display = 'none';
+}
 
+//this function creates and applies the proper hint in conjunction with the regEx helpers
 function showOrHideHint(validator, htmlHint ) {
     if (validator === false) {
        htmlHint.parentElement.classList.add('not-valid');
@@ -43,6 +43,7 @@ function showOrHideHint(validator, htmlHint ) {
     } 
 };
 
+//the following are the regEx helper functions that include the showOrHideHint function
 function isUsernameValid() {
     const hint = document.getElementById('name-hint');
     const regEx = /^(?!\s*$).+/.test(nameInput.value);
@@ -98,18 +99,7 @@ function isCVVValid(cvv) {
     return regEx;
 };
 
-function showOrHideHint(validator, htmlHint ) {
-    if (validator === false) {
-       htmlHint.parentElement.classList.add('not-valid');
-       htmlHint.parentElement.classList.remove('valid');
-       htmlHint.classList.remove('hint');
-    } else {
-        htmlHint.parentElement.classList.add('valid');
-        htmlHint.parentElement.classList.remove('not-valid');
-        htmlHint.classList.add('hint'); 
-    } 
-};
-
+//this listener is waiting for a change event on the job role select box, if the 'other' option is selected the 'other' input field is visible
 jobRoleSelect.addEventListener('change', e => {
     if (e.target.value === 'other') {
         jobRoleInput.style.display = 'block';
@@ -118,6 +108,8 @@ jobRoleSelect.addEventListener('change', e => {
     }
 });
 
+//this listener is waiting for an input event on the shirt design box 
+//it will reveal the color option box and make available only the matching colors to the user choice
 shirtDesignSelect.addEventListener('input', e => {
 const colorOptions = shirtColorSelect.querySelectorAll('[data-theme'); 
 shirtColorSelect.style.display = 'block';
@@ -146,6 +138,19 @@ shirtColorSelect.style.display = 'block';
     }       
 });
 
+//this adds the focus state to the currently selected activities check box
+function addRemoveFocus() {
+    for (i=0; i < checkBoxes.length; i++) {
+        checkBoxes[i].addEventListener('focus', event => {
+            event.target.parentElement.classList.add('focus');
+        })
+        checkBoxes[i].addEventListener('blur', event => {
+            event.target.parentElement.classList.remove('focus');
+        })
+    }
+};
+
+//this listener keeps track of the selected activities and updates the total
 activityFieldSet.addEventListener('change', e => {
     const runningTotal = parseInt(e.target.getAttribute('data-cost'));
     if (e.target.checked === true) {
@@ -156,7 +161,7 @@ activityFieldSet.addEventListener('change', e => {
     totalCostBox.textContent = `Total: ${totalCost}`;
 })
 
-
+//this listener will only display the content of the selected payment method
 paymentSelect.addEventListener('change', e => {
     if (e.target.value === 'paypal' ) {
         payPalDiv.style.display = 'block';
@@ -173,7 +178,7 @@ paymentSelect.addEventListener('change', e => {
     }
 
 })
-
+//this listener checks for the submit event and runs the validation helper functions and stops the submit event if any return false
 document.addEventListener('submit', e => {
     let inputValidation = [];
     inputValidation.push(isUsernameValid(nameInput));
@@ -189,3 +194,5 @@ document.addEventListener('submit', e => {
         e.preventDefault();
     }
 })
+
+
