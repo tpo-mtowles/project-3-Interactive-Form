@@ -55,7 +55,7 @@ function isActivitiesValid(activities) {
     let valid;
     const hint = document.getElementById('activities-hint');
     for (i=0; i < checkBoxes.length; i++) {
-        if (checkBoxes[i].checked === true) {
+        if (checkBoxes[i].checked) {
             isChecked++; 
         }
     } 
@@ -64,8 +64,8 @@ function isActivitiesValid(activities) {
         } else {
             valid = false;
         }   
-        showOrHideHint(isChecked, hint);   
-        return isChecked;      
+        showOrHideHint(valid, hint);   
+        return valid;      
 };
 
 function isCreditCardValid() {
